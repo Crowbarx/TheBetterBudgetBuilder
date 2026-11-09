@@ -45,7 +45,8 @@ function page.build(p)
     scale.auto:SetAlpha(S().contentScale and 1 or 0.45)
   end
   p.look[#p.look + 1] = scale
-  local pic = K.SettingRow(c, "Wallpaper", "Which of your pictures to show.")
+  local pic = K.SettingRow(c, "Wallpaper", "Which picture to show.")
+  pic.sub:SetPoint("RIGHT", pic, "RIGHT", -186, 0)
   pic.btn = T.Button(pic, "", 160, 30, function(self)
     T.Menu(self, ns.Wallpapers(), ns.Wallpaper().file, function(v) S().wallpaper = v; ns.Changed() end)
   end)
@@ -54,7 +55,8 @@ function page.build(p)
     pic.btn:SetLabel(ns.Wallpaper().text .. T.CARET)
     pic:SetAlpha(S().theme == "wallpaper" and 1 or 0.4)
   end
-  local acc = K.SettingRow(c, "Accent color", "Used when class color is off.")
+  local acc = K.SettingRow(c, "Accent color", "When class color is off.")
+  acc.sub:SetPoint("RIGHT", acc, "RIGHT", -210, 0)
   acc.btn = T.Button(acc, "", 160, 30, function(self)
     local choices = {}
     for _, a in ipairs(T.ACCENTS) do
