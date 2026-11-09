@@ -6,6 +6,10 @@ A gold budget for WoW Classic Forever. It tracks every copper you earn and spend
 
 ## Screenshots
 
+![Overview](Screenshots/overview.png)
+
+**Overview:** Safe to spend, your buckets, this week and the latest gold changes, all on one page.
+
 | | |
 |---|---|
 | ![Buckets](Screenshots/buckets.png) | ![Training](Screenshots/training.png) |
@@ -14,6 +18,8 @@ A gold budget for WoW Classic Forever. It tracks every copper you earn and spend
 | **Spending:** where your gold went, by category | **Income:** where it comes from, and gold per hour |
 | ![Ledger](Screenshots/ledger.png) | ![Settings](Screenshots/settings.png) |
 | **Ledger:** every copper in and out | **Settings:** themes, the vendor guard, bags and categories |
+| ![Loans](Screenshots/loans.png) | |
+| **Loans:** what you owe and what friends owe you | |
 
 ## EllesmereUI bags plugin
 
