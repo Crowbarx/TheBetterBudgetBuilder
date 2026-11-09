@@ -31,6 +31,26 @@ T.THEMES = {
   { value = "wallpaper", text = "Wallpaper" },
 }
 
+-- Your wallpapers: BBB_WALLPAPERS from the BBB_Wallpaper folder's List.lua, or
+-- just Wallpaper.tga.
+function ns.Wallpapers()
+  local list = {}
+  for _, w in ipairs(type(BBB_WALLPAPERS) == "table" and BBB_WALLPAPERS or {}) do
+    if type(w) == "table" and type(w.file) == "string" then
+      list[#list + 1] = { value = w.file, text = w.name or w.file, file = w.file }
+    end
+  end
+  if #list == 0 then list[1] = { value = "Wallpaper.tga", text = "Wallpaper", file = "Wallpaper.tga" } end
+  return list
+end
+
+function ns.Wallpaper()
+  local list = ns.Wallpapers()
+  local want = ns.db and ns.db.settings.wallpaper
+  for _, w in ipairs(list) do if w.file == want then return w end end
+  return list[1]
+end
+
 T.widgets = {} -- repaint functions run after every change
 
 function T.ClassRGB()

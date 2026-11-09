@@ -82,12 +82,12 @@ local function Create()
 
   -- Ground: dark tint, theme gradient, fine grain (KeyzenBars).
   T.Fill(root, "BACKGROUND", 0.02, 0.02, 0.04, 1, -8):SetAllPoints()
-  -- Your own picture: Interface\\AddOns\\BBB_Wallpaper\\Wallpaper.tga, a folder of its
-  -- own so addon updates never delete it (2048x1024, image in the left
-  -- 1521 px, which matches this window's shape) under a dark shade.
+  -- Your own pictures live in Interface\\AddOns\\BBB_Wallpaper, a folder of its own
+  -- so addon updates never delete them. Each is 2048x1024 with the image in the
+  -- left 1521 px (this window's shape). BBB_Wallpaper\\List.lua can name several
+  -- (BBB_WALLPAPERS); without it, Wallpaper.tga is used.
   local art = root:CreateTexture(nil, "BACKGROUND", nil, -7)
   art:SetAllPoints()
-  art:SetTexture("Interface\\AddOns\\BBB_Wallpaper\\Wallpaper.tga")
   art:SetTexCoord(0, 1521 / 2048, 0, 1) -- picture fills the left part of a 2048x1024 texture
   local shade = T.Fill(root, "BACKGROUND", 0.02, 0.02, 0.04, 0.72, -6)
   shade:SetAllPoints()
@@ -105,6 +105,7 @@ local function Create()
     local pic = st.theme == "wallpaper"
     art:SetShown(pic); shade:SetShown(pic)
     wash:SetShown(not pic); grain:SetShown(not pic)
+    if pic then art:SetTexture("Interface\\AddOns\\BBB_Wallpaper\\" .. ns.Wallpaper().file) end
     if pic then shade:SetColorTexture(0.02, 0.02, 0.04, st.artShade or 0.72)
     else T.ApplyTheme(wash, st.theme) end
   end

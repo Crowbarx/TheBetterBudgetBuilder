@@ -46,11 +46,26 @@ Open it with `/bbb`, the minimap button or the Budget row in your bags. `/bbb he
 
 ## Wallpaper theme
 
-The Wallpaper theme shows your own picture behind the window, with an adjustable shade so text stays readable.
+The Wallpaper theme shows your own pictures behind the window, with an adjustable shade so text stays readable. You can keep as many as you like and switch between them in Settings.
 
 1. Make a 2048×1024 TGA with your image in the left 1521 px. That part matches the window's shape, and the rest is unused.
-2. Save it as `Interface\AddOns\BBB_Wallpaper\Wallpaper.tga`. It lives in its own folder so addon updates never delete it.
-3. Restart the game and pick Settings → Theme → Wallpaper.
+2. Save it in `Interface\AddOns\BBB_Wallpaper\`, for example as `Wallpaper.tga`. The folder lives outside the addon so updates never delete it.
+3. For more than one picture, add `BBB_Wallpaper.toc` and `List.lua` to that folder:
+
+   ```
+   ## Interface: 16001
+   ## Title: BBB Wallpaper
+
+   List.lua
+   ```
+
+   ```lua
+   BBB_WALLPAPERS = {
+     { file = "Wallpaper.tga", name = "Sunset" },
+     { file = "Wallpaper2.tga", name = "Forest" },
+   }
+   ```
+4. Restart the game, pick Settings → Theme → Wallpaper, then choose a picture under Settings → Wallpaper.
 
 ## Development
 

@@ -4,7 +4,7 @@
 ## Author: Eric
 ## Version: @project-version@
 ## IconTexture: Interface\AddOns\BetterBudgetBuilder\Media\Icon.tga
-## OptionalDeps: EllesmereUI, EllesmereUIBags, LibDataBroker-1.1, LibDBIcon-1.0
+## OptionalDeps: BBB_Wallpaper, EllesmereUI, EllesmereUIBags, LibDataBroker-1.1, LibDBIcon-1.0
 ## SavedVariables: BBBDB
 ## X-Curse-Project-ID: 1794141
 ## Category: Economy

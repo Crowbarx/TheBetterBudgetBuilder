@@ -38,6 +38,16 @@ function page.build(p)
   scale.plus = T.Button(scale, "+", 30, 26, function() Step(0.05) end); scale.plus:SetPoint("RIGHT", -18, 0)
   T.widgets[#T.widgets + 1] = function() scale.value:SetText(math.floor(S().contentScale * 100 + 0.5) .. "%") end
   p.look[#p.look + 1] = scale
+  local pic = K.SettingRow(c, "Wallpaper", "Which of your pictures to show.")
+  pic.btn = T.Button(pic, "", 160, 30, function(self)
+    T.Menu(self, ns.Wallpapers(), ns.Wallpaper().file, function(v) S().wallpaper = v; ns.Changed() end)
+  end)
+  pic.btn:SetPoint("RIGHT", -18, 0)
+  T.widgets[#T.widgets + 1] = function()
+    pic.btn:SetLabel(ns.Wallpaper().text .. T.CARET)
+    pic:SetAlpha(S().theme == "wallpaper" and 1 or 0.4)
+  end
+  p.look[#p.look + 1] = pic
   local shadeRow = K.SettingRow(c, "Wallpaper shade", "Darker keeps text easy to read.")
   shadeRow.value = T.Bold(shadeRow, 12); shadeRow.value:SetPoint("RIGHT", -96, 0)
   local function Shade(d)

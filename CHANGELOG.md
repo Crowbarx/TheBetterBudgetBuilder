@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.9
+- Wallpaper theme: keep several pictures and pick one in Settings → Wallpaper. List them in `BBB_Wallpaper\List.lua` (see the README).
+
 ## 1.0.8
 - The Wallpaper theme now loads from `Interface\AddOns\BBB_Wallpaper\Wallpaper.tga`, outside the addon folder, so updates don't delete your picture.
 
