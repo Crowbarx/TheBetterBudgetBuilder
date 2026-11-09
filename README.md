@@ -6,20 +6,37 @@ A gold budget for WoW Classic Forever. It tracks every copper you earn and spend
 
 ## Screenshots
 
-![Overview](Screenshots/overview.png)
+<img src="Screenshots/overview.png" alt="Overview" width="760">
 
 **Overview:** Safe to spend, your buckets, this week and the latest gold changes, all on one page.
 
-| | |
-|---|---|
-| ![Buckets](Screenshots/buckets.png) | ![Training](Screenshots/training.png) |
-| **Buckets:** savings piles with goals and auto-fill | **Training:** your trainer's real prices, grouped by level |
-| ![Spending](Screenshots/spending.png) | ![Income](Screenshots/income.png) |
-| **Spending:** where your gold went, by category | **Income:** where it comes from, and gold per hour |
-| ![Ledger](Screenshots/ledger.png) | ![Settings](Screenshots/settings.png) |
-| **Ledger:** every copper in and out | **Settings:** themes, the vendor guard, bags and categories |
-| ![Loans](Screenshots/loans.png) | |
-| **Loans:** what you owe and what friends owe you | |
+<img src="Screenshots/buckets.png" alt="Buckets" width="760">
+
+**Buckets:** savings piles with goals and auto-fill.
+
+<img src="Screenshots/training.png" alt="Training" width="760">
+
+**Training:** your trainer's real prices, grouped by level.
+
+<img src="Screenshots/spending.png" alt="Spending" width="760">
+
+**Spending:** where your gold went, by category.
+
+<img src="Screenshots/income.png" alt="Income" width="760">
+
+**Income:** where it comes from, and gold per hour.
+
+<img src="Screenshots/ledger.png" alt="Ledger" width="760">
+
+**Ledger:** every copper in and out.
+
+<img src="Screenshots/loans.png" alt="Loans" width="760">
+
+**Loans:** what you owe and what friends owe you.
+
+<img src="Screenshots/settings.png" alt="Settings" width="760">
+
+**Settings:** themes, accent color, window scale, the vendor guard and bags.
 
 ## EllesmereUI bags plugin
 
