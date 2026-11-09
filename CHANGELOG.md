@@ -5,6 +5,7 @@
 - Auto-fill only uses gold you earn while playing, never a login gap, and never fills buckets past the gold you have.
 - At login, if your buckets hold more than your gold, the extra goes back to Safe to spend (bottom bucket first).
 - Settings: the Accent color and Wallpaper descriptions no longer run into their buttons.
+- The close button draws its X from lines, so it no longer shows up as an empty box.
 
 ## 1.0.9
 - Wallpaper theme: keep several pictures and pick one in Settings → Wallpaper. List them in `BBB_Wallpaper\List.lua` (see the README).

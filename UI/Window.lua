@@ -154,6 +154,27 @@ local function Create()
   local close = T.Button(root, "X", 34, 34, function() window:Hide() end)
   close:SetPoint("TOPRIGHT", -18, -18)
   close:SetFrameLevel(drag:GetFrameLevel() + 2)
+  -- Draw the X from two lines instead of a font glyph, which could come up blank.
+  close.lines = {}
+  local rotates = close:CreateTexture().SetRotation ~= nil
+  if rotates then close.text:SetText("") end
+  for i, deg in ipairs(rotates and { 45, -45 } or {}) do
+    local l = close:CreateTexture(nil, "OVERLAY")
+    l:SetTexture("Interface\\Buttons\\WHITE8x8")
+    l:SetSize(14, 2); l:SetPoint("CENTER")
+    l:SetRotation(math.rad(deg))
+    close.lines[i] = l
+  end
+  local paintClose = close.Paint
+  close.Paint = function(hover)
+    paintClose(hover)
+    local c = hover and T.Accent() or T.TEXT
+    for _, l in ipairs(close.lines) do l:SetVertexColor(c[1], c[2], c[3], 1) end
+  end
+  close:SetScript("OnEnter", function() close.Paint(true) end)
+  close:SetScript("OnLeave", function() close.Paint(false) end)
+  T.widgets[#T.widgets + 1] = function() close.Paint(close:IsMouseOver()) end
+  close.Paint(false)
   local headRule = T.Fill(root, "ARTWORK", 1, 1, 1, 0.07)
   headRule:SetHeight(1)
   headRule:SetPoint("TOPLEFT", SIDEBAR, -HEADER); headRule:SetPoint("TOPRIGHT", 0, -HEADER)
