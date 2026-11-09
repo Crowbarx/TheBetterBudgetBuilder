@@ -39,7 +39,7 @@ Without EllesmereUI, Safe to spend shows next to the gold in the Blizzard bags. 
 - **Buckets:** named savings piles with goals, goal levels, auto-fill percentages and icons. Training and Epic Mount (1,000g by 60) come built in.
 - **Vendor guard:** a popup before a buy dips into a bucket.
 - **Training:** read from your class trainer. Spells are grouped by level with real prices, and you can skip spells you won't train. The Training bucket's goal follows your level. **Train my list** buys everything that's ready except what you skipped.
-- **Loans, both ways:** gold friends lent you and gold you lent them. Trades and mail ask whether they were loans.
+- **Loans, both ways:** gold friends lent you and gold you lent them. Trades and mail ask whether they were loans, and repayments are matched for you. What you owe isn't safe to spend. Gold you lend isn't counted as spending, and getting it back isn't counted as income. You also get a reminder when that friend comes online.
 - **Ledger, Spending and Income:** every gold change, categories with sorting rules, and charts by day, week or month.
 
 Open it with `/bbb`, the minimap button or the Budget row in your bags. `/bbb help` lists the commands.
