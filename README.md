@@ -4,6 +4,17 @@ A gold budget for WoW Classic Forever. It tracks every copper you earn and spend
 
 **Works as a plugin for EllesmereUI bags.** Your budget lives right inside your bags. It also runs on its own with the default Blizzard bags.
 
+## Screenshots
+
+| | |
+|---|---|
+| ![Buckets](Screenshots/buckets.png) | ![Training](Screenshots/training.png) |
+| **Buckets:** savings piles with goals and auto-fill | **Training:** your trainer's real prices, grouped by level |
+| ![Spending](Screenshots/spending.png) | ![Income](Screenshots/income.png) |
+| **Spending:** where your gold went, by category | **Income:** where it comes from, and gold per hour |
+| ![Ledger](Screenshots/ledger.png) | ![Settings](Screenshots/settings.png) |
+| **Ledger:** every copper in and out | **Settings:** themes, the vendor guard, bags and categories |
+
 ## EllesmereUI bags plugin
 
 When EllesmereUI Bags is loaded, the BBB adds itself to your bag window. It doesn't change any EllesmereUI files.
