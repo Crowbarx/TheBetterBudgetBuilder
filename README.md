@@ -42,6 +42,7 @@ Without EllesmereUI, Safe to spend shows next to the gold in the Blizzard bags. 
 - **Loans, both ways:** gold friends lent you and gold you lent them. Trades and mail ask whether they were loans, and repayments are matched for you. What you owe isn't safe to spend. Gold you lend isn't counted as spending, and getting it back isn't counted as income. You also get a reminder when that friend comes online.
 - **Ledger, Spending and Income:** every gold change, categories with sorting rules, and charts by day, week or month.
 - **Your look:** Class colored, Midnight, Dark or your own wallpapers, with highlights in your class color or any accent color you pick.
+- **Fits any screen:** on Auto the window sizes itself to your monitor and UI scale, or set it yourself from 50% to 150% (`/bbb scale`, `/bbb reset`).
 
 Open it with `/bbb`, the minimap button or the Budget row in your bags. `/bbb help` lists the commands.
 
