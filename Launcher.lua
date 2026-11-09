@@ -117,8 +117,16 @@ SlashCmdList.BBB = function(msg)
     local moved = Bk.FillAll(ns.Buckets(), math.max(0, ns.Safe()), ns.Goal)
     ns.Print("Moved " .. ns.Fmt(moved, true) .. " into your buckets.")
     ns.Changed()
+  elseif msg:match("^scale") then
+    local n = tonumber(msg:match("(%d+)"))
+    if n then ns.db.settings.contentScale = math.max(0.5, math.min(1.5, n / 100)) else ns.db.settings.contentScale = nil end
+    ns.ApplyScale(); ns.Changed()
+    ns.Print("Window scale " .. (n and (math.floor(ns.WindowScale() * 100 + 0.5) .. "%.") or ("Auto (" .. math.floor(ns.WindowScale() * 100 + 0.5) .. "%).")))
+  elseif msg == "reset" then
+    ns.db.settings.contentScale = nil; ns.ResetWindow(); ns.Changed()
+    ns.Print("Window centered and back to Auto size.")
   elseif msg == "debug" then ns.debug = not ns.debug; ns.Print("Debug " .. (ns.debug and "on" or "off"))
   else
-    ns.Print("/bbb (window), /bbb buckets | ledger | spending | income | loans | training | settings, /bbb bags, /bbb train (at your trainer), /bbb fill, /bbb guard, /bbb minimap")
+    ns.Print("/bbb (window), /bbb buckets | ledger | spending | income | loans | training | settings, /bbb bags, /bbb train (at your trainer), /bbb fill, /bbb guard, /bbb minimap, /bbb scale 50-150 (or auto), /bbb reset")
   end
 end

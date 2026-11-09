@@ -28,15 +28,22 @@ function page.build(p)
   end
   p.look[#p.look + 1] = theme
   p.look[#p.look + 1] = ToggleRow(c, "Class color accent", "Highlights in your class color.", "classAccent")
-  local scale = K.SettingRow(c, "Window scale", "Size of the whole window.")
+  local scale = K.SettingRow(c, "Window scale", "Auto fits your screen.")
+  scale.sub:SetPoint("RIGHT", scale, "RIGHT", -206, 0)
   scale.value = T.Bold(scale, 12); scale.value:SetPoint("RIGHT", -96, 0)
   local function Step(d)
-    S().contentScale = math.max(0.5, math.min(1.3, math.floor((S().contentScale + d) * 20 + 0.5) / 20))
+    local now = S().contentScale or ns.WindowScale()
+    S().contentScale = math.max(0.5, math.min(1.5, math.floor((now + d) * 20 + 0.5) / 20))
     ns.ApplyScale(); ns.Changed()
   end
   scale.minus = T.Button(scale, "-", 30, 26, function() Step(-0.05) end); scale.minus:SetPoint("RIGHT", -54, 0)
   scale.plus = T.Button(scale, "+", 30, 26, function() Step(0.05) end); scale.plus:SetPoint("RIGHT", -18, 0)
-  T.widgets[#T.widgets + 1] = function() scale.value:SetText(math.floor(S().contentScale * 100 + 0.5) .. "%") end
+  scale.auto = T.Button(scale, "Auto", 46, 26, function() S().contentScale = nil; ns.ApplyScale(); ns.Changed() end)
+  scale.auto:SetPoint("RIGHT", -150, 0)
+  T.widgets[#T.widgets + 1] = function()
+    scale.value:SetText(math.floor(ns.WindowScale() * 100 + 0.5) .. "%")
+    scale.auto:SetAlpha(S().contentScale and 1 or 0.45)
+  end
   p.look[#p.look + 1] = scale
   local pic = K.SettingRow(c, "Wallpaper", "Which of your pictures to show.")
   pic.btn = T.Button(pic, "", 160, 30, function(self)

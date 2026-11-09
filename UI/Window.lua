@@ -72,7 +72,7 @@ local function Create()
   root = CreateFrame("Frame", nil, window)
   root:SetPoint("TOPLEFT")
   local function Scale()
-    local s = ns.db.settings.contentScale or 0.8
+    local s = ns.WindowScale()
     window:SetSize(WIDTH * s, HEIGHT * s)
     root:SetScale(s)
     root:SetSize(WIDTH, HEIGHT)
@@ -255,7 +255,34 @@ function ns.ToggleWindow(key)
   ns.ShowPage(key or (current and current.key) or ns.db.settings.lastPage or "overview")
 end
 
+-- Window scale: your setting, or (Auto) a size that suits your screen. It never
+-- grows past what fits on screen, so big UI scales and small monitors work.
+local function Fit()
+  local w, h = UIParent:GetWidth(), UIParent:GetHeight()
+  if not w or w <= 0 or not h or h <= 0 then return 1.5 end
+  return math.min(w * 0.96 / WIDTH, h * 0.94 / HEIGHT)
+end
+function ns.AutoScale()
+  local h = UIParent:GetHeight() or 768
+  local s = math.floor(h * 0.72 / HEIGHT * 20 + 0.5) / 20
+  return math.max(0.5, math.min(1.5, s))
+end
+function ns.WindowScale()
+  local s = ns.db and ns.db.settings.contentScale or ns.AutoScale()
+  return math.max(0.4, math.min(s, Fit()))
+end
 function ns.ApplyScale() if window then window.Scale() end end
+-- Re-fit when the resolution or UI scale changes (events only, no timers).
+do
+  local f = CreateFrame("Frame")
+  f:RegisterEvent("UI_SCALE_CHANGED"); f:RegisterEvent("DISPLAY_SIZE_CHANGED")
+  f:SetScript("OnEvent", function() ns.ApplyScale() end)
+end
+function ns.ResetWindow()
+  if not window then return end
+  window:ClearAllPoints(); window:SetPoint("CENTER")
+  ns.ApplyScale()
+end
 
 ns.OnChange(function() ns.RefreshWindow() end)
 

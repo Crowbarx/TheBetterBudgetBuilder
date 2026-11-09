@@ -33,7 +33,7 @@ local SETTINGS = {
   artShade = 0.72,             -- how dark the shade over the wallpaper is
   classAccent = true,
   accent = { 0.89, 0.67, 0.44, 1 },
-  contentScale = 0.8,
+  contentScale = nil,          -- window scale; nil = Auto (fits your screen)
   guard = true,                -- ask before a purchase dips into a bucket
   includeAlts = false,         -- count every character's gold (one master budget)
   bagRow = true,               -- "Budget" row in the EllesmereUI bag sidebar
