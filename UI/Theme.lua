@@ -70,6 +70,47 @@ function T.Accent()
   return s.accent
 end
 
+-- Accent colors to pick from when class color is off.
+T.ACCENTS = {
+  { text = "Gold", rgb = { 0.89, 0.67, 0.44 } },
+  { text = "Rose", rgb = { 0.93, 0.47, 0.62 } },
+  { text = "Crimson", rgb = { 0.86, 0.26, 0.30 } },
+  { text = "Amber", rgb = { 1.00, 0.60, 0.20 } },
+  { text = "Emerald", rgb = { 0.30, 0.80, 0.50 } },
+  { text = "Teal", rgb = { 0.25, 0.80, 0.78 } },
+  { text = "Sky", rgb = { 0.40, 0.68, 1.00 } },
+  { text = "Violet", rgb = { 0.64, 0.48, 0.96 } },
+  { text = "Silver", rgb = { 0.80, 0.82, 0.86 } },
+}
+
+function T.AccentName()
+  local a = ns.db and ns.db.settings.accent
+  if not a then return "Gold" end
+  for _, p in ipairs(T.ACCENTS) do
+    if math.abs(p.rgb[1] - a[1]) < 0.01 and math.abs(p.rgb[2] - a[2]) < 0.01 and math.abs(p.rgb[3] - a[3]) < 0.01 then return p.text end
+  end
+  return "Custom"
+end
+
+-- Blizzard's color wheel for any accent you like.
+function T.PickAccentColor()
+  local s = ns.db.settings
+  local old = { s.accent[1], s.accent[2], s.accent[3], 1 }
+  local function Set(r, g, b) s.accent = { r, g, b, 1 }; s.classAccent = false; ns.Changed() end
+  local function Live() Set(ColorPickerFrame:GetColorRGB()) end
+  local function Cancel() Set(old[1], old[2], old[3]) end
+  if ColorPickerFrame.SetupColorPickerAndShow then
+    ColorPickerFrame:SetupColorPickerAndShow({ r = old[1], g = old[2], b = old[3], hasOpacity = false, swatchFunc = Live, cancelFunc = Cancel })
+  else
+    ColorPickerFrame.hasOpacity = false
+    ColorPickerFrame.previousValues = { old[1], old[2], old[3] }
+    ColorPickerFrame.func, ColorPickerFrame.cancelFunc = Live, Cancel
+    ColorPickerFrame:SetColorRGB(old[1], old[2], old[3])
+    ColorPickerFrame:Hide(); ColorPickerFrame:Show()
+  end
+  ColorPickerFrame:Raise()
+end
+
 function T.Repaint() for _, fn in ipairs(T.widgets) do pcall(fn) end end
 
 function T.SetFont(fs, path, size, color)

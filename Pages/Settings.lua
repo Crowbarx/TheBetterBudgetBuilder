@@ -47,7 +47,30 @@ function page.build(p)
     pic.btn:SetLabel(ns.Wallpaper().text .. T.CARET)
     pic:SetAlpha(S().theme == "wallpaper" and 1 or 0.4)
   end
-  p.look[#p.look + 1] = pic
+  local acc = K.SettingRow(c, "Accent color", "Used when class color is off.")
+  acc.btn = T.Button(acc, "", 160, 30, function(self)
+    local choices = {}
+    for _, a in ipairs(T.ACCENTS) do
+      choices[#choices + 1] = { value = a.text, text = ("|cff%02x%02x%02x%s|r"):format(a.rgb[1] * 255, a.rgb[2] * 255, a.rgb[3] * 255, a.text) }
+    end
+    choices[#choices + 1] = { value = "custom", text = "Custom..." }
+    T.Menu(self, choices, not S().classAccent and T.AccentName() or nil, function(v)
+      if v == "custom" then T.PickAccentColor(); return end
+      for _, a in ipairs(T.ACCENTS) do
+        if a.text == v then S().accent = { a.rgb[1], a.rgb[2], a.rgb[3], 1 }; S().classAccent = false end
+      end
+      ns.Changed()
+    end)
+  end)
+  acc.btn:SetPoint("RIGHT", -18, 0)
+  acc.swatch = T.Fill(acc, "ARTWORK", 1, 1, 1, 1); acc.swatch:SetSize(14, 14)
+  acc.swatch:SetPoint("RIGHT", acc.btn, "LEFT", -10, 0)
+  T.widgets[#T.widgets + 1] = function()
+    local a = S().accent
+    acc.swatch:SetColorTexture(a[1], a[2], a[3], 1)
+    acc.btn:SetLabel((S().classAccent and "Class color" or T.AccentName()) .. T.CARET)
+    acc:SetAlpha(S().classAccent and 0.6 or 1)
+  end
   local shadeRow = K.SettingRow(c, "Wallpaper shade", "Darker keeps text easy to read.")
   shadeRow.value = T.Bold(shadeRow, 12); shadeRow.value:SetPoint("RIGHT", -96, 0)
   local function Shade(d)
@@ -60,7 +83,9 @@ function page.build(p)
     shadeRow.value:SetText(math.floor((S().artShade or 0.72) * 100 + 0.5) .. "%")
     shadeRow:SetAlpha(S().theme == "wallpaper" and 1 or 0.4)
   end
+  p.look[#p.look + 1] = acc
   p.look[#p.look + 1] = shadeRow
+  p.look[#p.look + 1] = pic
 
   p.behaveHead = T.Section(c, "Behavior")
   p.behave = {
