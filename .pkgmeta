@@ -1,0 +1,9 @@
+package-as: BetterBudgetBuilder
+
+enable-nolib-creation: no
+
+ignore:
+  - .github
+  - .gitignore
+  - .pkgmeta
+  - tests

@@ -1,0 +1,8 @@
+<Bindings>
+  <Binding name="BBB_TOGGLE" header="BBB" category="ADDONS">
+    BBB.ToggleWindow()
+  </Binding>
+  <Binding name="BBB_BUCKETS" category="ADDONS">
+    BBB.ToggleWindow("buckets")
+  </Binding>
+</Bindings>

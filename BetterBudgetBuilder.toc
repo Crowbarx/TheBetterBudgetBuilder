@@ -1,0 +1,35 @@
+## Interface: 16001
+## Title: The BBB (Better Budget Builder)
+## Notes: Tracks every copper you earn and spend, sorts gold into savings buckets, asks before a buy dips into them, and lives in your EllesmereUI bags. /bbb
+## Author: Eric
+## Version: @project-version@
+## IconTexture: Interface\AddOns\BetterBudgetBuilder\Media\Icon.tga
+## OptionalDeps: EllesmereUI, EllesmereUIBags, LibDataBroker-1.1, LibDBIcon-1.0
+## SavedVariables: BBBDB
+
+Logic\Money.lua
+Logic\Period.lua
+Logic\Lines.lua
+Logic\Buckets.lua
+Logic\Training.lua
+Logic\Stats.lua
+Data.lua
+Capture.lua
+Loans.lua
+Trainer.lua
+Guard.lua
+UI\Theme.lua
+UI\Kit.lua
+UI\Charts.lua
+UI\Window.lua
+UI\IconPicker.lua
+Pages\Overview.lua
+Pages\Flows.lua
+Pages\Ledger.lua
+Pages\Buckets.lua
+Pages\Loans.lua
+Pages\Training.lua
+Pages\Settings.lua
+EUIBagRows.lua
+Bags.lua
+Launcher.lua
