@@ -25,6 +25,8 @@ A gold budget for WoW Classic Forever. It tracks every copper you earn and spend
 
 When EllesmereUI Bags is loaded, the BBB adds itself to your bag window. It doesn't change any EllesmereUI files.
 
+<img src="Screenshots/bags.png" alt="EllesmereUI bags with Safe to spend in the footer" width="420">
+
 - **A Budget row in the bag sidebar**, below your categories. Click it to see Safe to spend, your buckets with progress bars, Fill to goals and your open loans, all in the bag's item area. Click any other sidebar entry to return to your items.
 - **Safe to spend in the bag footer**, where your gold is shown. By default it hides your total gold, so you only see what's safe to spend. Hover for the full breakdown, or turn your gold back on in Settings → Hide my total gold.
 - It shares the sidebar with other plugins that use the same row helper (`EUIBagRows.lua`), and their rows stack neatly.
