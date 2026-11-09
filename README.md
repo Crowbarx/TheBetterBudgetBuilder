@@ -46,7 +46,11 @@ Open it with `/bbb`, the minimap button or the Budget row in your bags. `/bbb he
 
 ## Wallpaper theme
 
-The Wallpaper theme uses your own picture. Save it as `Media/Wallpaper.tga`: a 2048×1024 TGA with the image in the left 1521 px (the window's shape). Then restart the game and pick Settings → Theme → Wallpaper. You can adjust the shade over it in Settings.
+The Wallpaper theme shows your own picture behind the window, with an adjustable shade so text stays readable.
+
+1. Make a 2048×1024 TGA with your image in the left 1521 px. That part matches the window's shape, and the rest is unused.
+2. Save it as `Interface\AddOns\BBB_Wallpaper\Wallpaper.tga`. It lives in its own folder so addon updates never delete it.
+3. Restart the game and pick Settings → Theme → Wallpaper.
 
 ## Development
 

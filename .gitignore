@@ -1,4 +1,5 @@
 .DS_Store
 Thumbs.db
 # Your own window background stays on your PC
+# (wallpaper now lives outside the addon: AddOns\BBB_Wallpaper)
 Media/Wallpaper.tga

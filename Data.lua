@@ -28,7 +28,7 @@ end
 -- Defaults
 ---------------------------------------------------------------------------
 local SETTINGS = {
-  theme = "classcolor",        -- classcolor | midnight | dark | wallpaper (your own Media\\Wallpaper.tga)
+  theme = "classcolor",        -- classcolor | midnight | dark | wallpaper (your own AddOns\\BBB_Wallpaper\\Wallpaper.tga)
   artShade = 0.72,             -- how dark the shade over the wallpaper is
   classAccent = true,
   accent = { 0.89, 0.67, 0.44, 1 },

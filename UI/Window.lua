@@ -82,11 +82,12 @@ local function Create()
 
   -- Ground: dark tint, theme gradient, fine grain (KeyzenBars).
   T.Fill(root, "BACKGROUND", 0.02, 0.02, 0.04, 1, -8):SetAllPoints()
-  -- Your own picture (Media\\Wallpaper.tga, 2048x1024 with the image in the left
+  -- Your own picture: Interface\\AddOns\\BBB_Wallpaper\\Wallpaper.tga, a folder of its
+  -- own so addon updates never delete it (2048x1024, image in the left
   -- 1521 px, which matches this window's shape) under a dark shade.
   local art = root:CreateTexture(nil, "BACKGROUND", nil, -7)
   art:SetAllPoints()
-  art:SetTexture(ns.MEDIA .. "Wallpaper.tga")
+  art:SetTexture("Interface\\AddOns\\BBB_Wallpaper\\Wallpaper.tga")
   art:SetTexCoord(0, 1521 / 2048, 0, 1) -- picture fills the left part of a 2048x1024 texture
   local shade = T.Fill(root, "BACKGROUND", 0.02, 0.02, 0.04, 0.72, -6)
   shade:SetAllPoints()

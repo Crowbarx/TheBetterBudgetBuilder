@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.8
+- The Wallpaper theme now loads from `Interface\AddOns\BBB_Wallpaper\Wallpaper.tga`, outside the addon folder, so updates don't delete your picture.
+
 ## 1.0.7
 - Shorter Settings and Overview text, so nothing gets cut off.
 
