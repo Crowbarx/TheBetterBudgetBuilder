@@ -64,7 +64,7 @@ end
 function page.refresh(p)
   local c = p.child
   local gold, saved, owed, safe = ns.Gold(), Bk.Saved(ns.Buckets()), ns.Owed(), ns.Safe()
-  p.cards[1]:Set("Safe to spend", ns.Coins(safe, 15), "Gold not in a bucket or owed", safe < 0 and T.BAD or T.TEXT, true)
+  p.cards[1]:Set("Safe to spend", ns.Coins(safe, 15), "Not saved or owed", safe < 0 and T.BAD or T.TEXT, true)
   p.cards[2]:Set("Gold", ns.Coins(gold, 15), ns.db.settings.includeAlts and "All your characters" or "On this character")
   p.cards[3]:Set("In buckets", ns.Coins(saved, 15), #ns.Buckets() .. " savings bucket" .. (#ns.Buckets() == 1 and "" or "s"))
   local loans = ns.OpenLoans()

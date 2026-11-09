@@ -54,8 +54,8 @@ function page.build(p)
 
   p.behaveHead = T.Section(c, "Behavior")
   p.behave = {
-    ToggleRow(c, "Vendor guard", "Ask before a purchase dips into a bucket.", "guard"),
-    ToggleRow(c, "Loan prompts", "Ask whether a gold trade was a loan.", "loanPrompts"),
+    ToggleRow(c, "Vendor guard", "Asks before a buy uses savings.", "guard"),
+    ToggleRow(c, "Loan prompts", "Asks if gold traded was a loan.", "loanPrompts"),
     ToggleRow(c, "Count alts' gold", "One budget for every character.", "includeAlts"),
     ToggleRow(c, "Minimap button", "Left: the BBB. Right: Buckets.", "minimapShown", function(v) if ns.SetMinimapShown then ns.SetMinimapShown(v) end end),
   }
@@ -65,7 +65,7 @@ function page.build(p)
     ToggleRow(c, "Safe to spend by your gold", "Shown in the bag footer.", "bagFooter"),
     ToggleRow(c, "Hide my total gold", "Bags show only Safe to spend.", "hideBagGold"),
   }
-  p.bag[1].sub:SetText("A Budget row in the bag sidebar. Reloads your UI.")
+  p.bag[1].sub:SetText("Sidebar row. Reloads your UI.")
 
   p.catHead = T.Section(c, "Spending categories")
   p.catRows = ns.Pool(function(parent)

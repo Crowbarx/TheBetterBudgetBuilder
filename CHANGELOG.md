@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.7
+- Shorter Settings and Overview text, so nothing gets cut off.
+
 ## 1.0.6
 - First public version. Works as a plugin for EllesmereUI bags (a Budget sidebar row and Safe to spend in the footer), or on its own.
   The Wallpaper theme now uses your own `Media/Wallpaper.tga`, and Class colored is the default theme.
