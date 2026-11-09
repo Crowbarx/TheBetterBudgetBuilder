@@ -2,6 +2,18 @@
 
 A gold budget for WoW Classic Forever. It tracks every copper you earn and spend, sorts gold into savings buckets, and asks before a purchase dips into them.
 
+**Works as a plugin for EllesmereUI bags.** Your budget lives right inside your bags. It also runs on its own with the default Blizzard bags.
+
+## EllesmereUI bags plugin
+
+When EllesmereUI Bags is loaded, the BBB adds itself to your bag window. It doesn't change any EllesmereUI files.
+
+- **A Budget row in the bag sidebar**, below your categories. Click it to see Safe to spend, your buckets with progress bars, Fill to goals and your open loans, all in the bag's item area. Click any other sidebar entry to return to your items.
+- **Safe to spend in the bag footer**, where your gold is shown. By default it hides your total gold, so you only see what's safe to spend. Hover for the full breakdown, or turn your gold back on in Settings → Hide my total gold.
+- It shares the sidebar with other plugins that use the same row helper (`EUIBagRows.lua`), and their rows stack neatly.
+
+Without EllesmereUI, Safe to spend shows next to the gold in the Blizzard bags. The `/bbb` window and the minimap button work either way.
+
 ## What it does
 
 - **Safe to spend:** your gold minus what's in buckets and what you owe. It shows in the sidebar, on the minimap button, and in the EllesmereUI bag footer, which can hide your total gold.
@@ -10,7 +22,6 @@ A gold budget for WoW Classic Forever. It tracks every copper you earn and spend
 - **Training:** read from your class trainer. Spells are grouped by level with real prices, and you can skip spells you won't train. The Training bucket's goal follows your level. **Train my list** buys everything that's ready except what you skipped.
 - **Loans, both ways:** gold friends lent you and gold you lent them. Trades and mail ask whether they were loans.
 - **Ledger, Spending and Income:** every gold change, categories with sorting rules, and charts by day, week or month.
-- **EllesmereUI bags:** a Budget row in the bag sidebar.
 
 Open it with `/bbb`, the minimap button or the Budget row in your bags. `/bbb help` lists the commands.
 
