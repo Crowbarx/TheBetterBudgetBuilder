@@ -21,8 +21,9 @@ end
 
 -- New gold: each bucket with an auto % takes its share until it reaches its
 -- goal. target(b) returns the goal in copper or nil (no goal = no limit).
+-- room (optional) caps the total so buckets never hold more than you have.
 -- Mutates buckets; returns { [id] = copper }.
-function B.Earn(buckets, amount, target)
+function B.Earn(buckets, amount, target, room)
   local alloc = {}
   for _, b in ipairs(buckets) do
     local pct = b.pct or 0
@@ -30,6 +31,7 @@ function B.Earn(buckets, amount, target)
       local share = floor(amount * pct / 100)
       local goal = target and target(b)
       if goal then share = min(share, max(0, goal - (b.saved or 0))) end
+      if room then share = min(share, max(0, room)); room = room - max(0, share) end
       if share > 0 then
         b.saved = (b.saved or 0) + share
         alloc[b.id] = share
@@ -37,6 +39,20 @@ function B.Earn(buckets, amount, target)
     end
   end
   return alloc
+end
+
+-- Buckets can't hold more than `limit` (your gold minus what you owe): take
+-- the extra out, bottom of the list first. Returns the copper removed.
+function B.Clamp(buckets, limit)
+  local extra = B.Saved(buckets) - max(0, limit)
+  local removed = 0
+  for i = #buckets, 1, -1 do
+    if extra <= 0 then break end
+    local b = buckets[i]
+    local take = min(extra, max(0, b.saved or 0))
+    if take > 0 then b.saved = b.saved - take; extra = extra - take; removed = removed + take end
+  end
+  return removed
 end
 
 -- The buckets a shortfall is taken from: the paying bucket first, then from

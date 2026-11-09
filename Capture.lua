@@ -63,8 +63,12 @@ local function Spend(row)
   end
 end
 
+-- Auto-fill comes from new earnings only, never from a login gap (that gold
+-- may already be in your buckets), and never past the gold you actually have.
 local function Earn(row)
-  local alloc = Bk.Earn(ns.Buckets(), row.d, ns.Goal)
+  if row.src == "unexplained" then return end
+  local room = ns.Gold() - ns.Owed() - Bk.Saved(ns.Buckets())
+  local alloc = Bk.Earn(ns.Buckets(), row.d, ns.Goal, room)
   if next(alloc) then row.a = alloc end
 end
 
@@ -128,7 +132,38 @@ local function Tick()
   mark = now
 end
 
+-- Compare your gold with what we saw last time. Forever can report 0 gold
+-- for a moment at login, so wait for the real amount before comparing:
+-- otherwise your whole wallet looks like new income.
+local synced
+function ns.SyncGold()
+  if synced then return true end
+  local c = ns.Char()
+  local now = GetMoney()
+  if (now or 0) == 0 and (c.money or 0) > 0 then return false end
+  synced = true
+  if c.money and c.money ~= now then
+    local row = ns.Record(now - c.money, "unexplained", { note = "Gold changed while BBB wasn't watching" })
+    row.auto = true
+  end
+  c.money, c.seenAt = now, time()
+  last = now
+  -- Buckets never hold more than your gold (repairs fills from the old
+  -- logout bug). Buckets are shared, so only when they count this gold.
+  local chars = 0
+  for _ in pairs(ns.db.chars) do chars = chars + 1 end
+  if ns.db.settings.includeAlts or chars <= 1 then
+    local fixed = Bk.Clamp(ns.Buckets(), ns.Gold() - ns.Owed())
+    if fixed > 0 then
+      ns.Print("Your buckets held more than your gold, so " .. ns.Fmt(fixed, true) .. " went back to Safe to spend.")
+    end
+  end
+  ns.Changed()
+  return true
+end
+
 local function OnMoney()
+  if not synced then ns.SyncGold(); return end
   local now = GetMoney()
   local d = now - (last or now)
   last = now
@@ -263,7 +298,7 @@ local function Close(key, secs)
 end
 
 local ev = CreateFrame("Frame")
-for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "PLAYER_LOGOUT", "PLAYER_MONEY", "PLAYER_LEVEL_UP",
+for _, e in ipairs({ "ADDON_LOADED", "PLAYER_LOGIN", "PLAYER_ENTERING_WORLD", "PLAYER_LOGOUT", "PLAYER_MONEY", "PLAYER_LEVEL_UP",
   "MERCHANT_SHOW", "MERCHANT_CLOSED", "TRAINER_SHOW", "TRAINER_CLOSED", "TAXIMAP_OPENED", "TAXIMAP_CLOSED",
   "AUCTION_HOUSE_SHOW", "AUCTION_HOUSE_CLOSED", "MAIL_SHOW", "MAIL_CLOSED", "TRADE_SHOW", "TRADE_CLOSED",
   "LOOT_READY", "LOOT_OPENED", "LOOT_CLOSED", "QUEST_TURNED_IN", "QUEST_COMPLETE", "QUEST_FINISHED", "CHAT_MSG_MONEY" }) do
@@ -277,22 +312,23 @@ ev:SetScript("OnEvent", function(_, event, a1, a2, a3)
     local c = ns.Char()
     local _, class = UnitClass("player")
     c.class, c.level, c.name = class, UnitLevel("player"), UnitName("player")
-    local now = GetMoney()
-    if c.money and c.money ~= now then
-      local row = ns.Record(now - c.money, "unexplained", { note = "Gold changed while BBB wasn't watching" })
-      row.auto = true
-    end
-    c.money, c.seenAt = now, time()
-    last = now
+    synced = nil
+    ns.SyncGold()
     Tick()
     Fold()
     InstallHooks()
     if ns.InstallGuard then ns.InstallGuard() end
     ns.Changed()
+  elseif event == "PLAYER_ENTERING_WORLD" then
+    ns.SyncGold()
   elseif event == "PLAYER_LOGOUT" then
     Tick()
     local c = ns.Char()
-    c.money, c.seenAt = GetMoney(), time()
+    -- Forever can report 0 gold while logging out; keep the last gold we saw.
+    local now = GetMoney()
+    if not synced then return end -- never saw your real gold this session
+    if (now or 0) == 0 and last and last > 0 then now = last end
+    c.money, c.seenAt = now, time()
   elseif event == "PLAYER_MONEY" then
     OnMoney()
   elseif event == "PLAYER_LEVEL_UP" then

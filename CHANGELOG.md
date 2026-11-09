@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.10
+- Fixed buckets filling with more gold than you have. Forever can report 0 gold at logout and for a moment at login, which made your whole wallet look like new income and auto-fill put it in your buckets again. The BBB now waits for your real gold, and keeps the last gold it saw when logging out.
+- Auto-fill only uses gold you earn while playing, never a login gap, and never fills buckets past the gold you have.
+- At login, if your buckets hold more than your gold, the extra goes back to Safe to spend (bottom bucket first).
+- Settings: the Accent color and Wallpaper descriptions no longer run into their buttons.
+
 ## 1.0.9
 - Wallpaper theme: keep several pictures and pick one in Settings → Wallpaper. List them in `BBB_Wallpaper\List.lua` (see the README).
 - Accent color: pick one of nine colors, or any color from the color wheel, when Class color accent is off.

@@ -138,5 +138,15 @@ eq(St.PerHour(10000, 1800), 20000, "per hour")
 local e, s2 = St.Totals(rows, today - 1, L.Kind)
 eq(e, 1000, "earned"); eq(s2, 800, "spent")
 
+-- Auto-fill never puts more in buckets than you have room for
+local cb = { { id = "a", saved = 0, pct = 50 }, { id = "b", saved = 0, pct = 50 } }
+local ca = Bk.Earn(cb, 10000, nil, 6000)
+eq(ca.a, 5000, "room: first bucket"); eq(ca.b, 1000, "room: capped"); eq(Bk.Saved(cb), 6000, "room: total")
+eq(next(Bk.Earn(cb, 10000, nil, 0)), nil, "no room, no fill")
+-- Clamp takes the extra from the bottom of the list
+local kb = { { id = "top", saved = 5000 }, { id = "low", saved = 3000 } }
+eq(Bk.Clamp(kb, 6000), 2000, "clamp removed"); eq(kb[2].saved, 1000, "bottom first"); eq(kb[1].saved, 5000, "top kept")
+eq(Bk.Clamp(kb, -50), 6000, "clamp to zero"); eq(Bk.Saved(kb), 0, "all out")
+
 print(("%d passed, %d failed"):format(passed, failed))
 if failed > 0 then os.exit(1) end
