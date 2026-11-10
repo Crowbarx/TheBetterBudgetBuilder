@@ -45,7 +45,7 @@ function page.build(p)
     scale.auto:SetAlpha(S().contentScale and 1 or 0.45)
   end
   p.look[#p.look + 1] = scale
-  local pic = K.SettingRow(c, "Wallpaper", "One picture, or shuffle them.")
+  local pic = K.SettingRow(c, "Wallpaper", "Pick one, or shuffle.")
   pic.sub:SetPoint("RIGHT", pic, "RIGHT", -186, 0)
   pic.btn = T.Button(pic, "", 160, 30, function(self)
     T.Menu(self, ns.WallpaperChoices(), S().wallpaper == "shuffle" and "shuffle" or ns.Wallpaper().file, function(v)
