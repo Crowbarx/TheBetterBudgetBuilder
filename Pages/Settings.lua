@@ -45,14 +45,17 @@ function page.build(p)
     scale.auto:SetAlpha(S().contentScale and 1 or 0.45)
   end
   p.look[#p.look + 1] = scale
-  local pic = K.SettingRow(c, "Wallpaper", "Which picture to show.")
+  local pic = K.SettingRow(c, "Wallpaper", "One picture, or shuffle them.")
   pic.sub:SetPoint("RIGHT", pic, "RIGHT", -186, 0)
   pic.btn = T.Button(pic, "", 160, 30, function(self)
-    T.Menu(self, ns.Wallpapers(), ns.Wallpaper().file, function(v) S().wallpaper = v; ns.Changed() end)
+    T.Menu(self, ns.WallpaperChoices(), S().wallpaper == "shuffle" and "shuffle" or ns.Wallpaper().file, function(v)
+      if v == "shuffle" then ns.ShuffleWallpaper() end
+      S().wallpaper = v; ns.Changed()
+    end)
   end)
   pic.btn:SetPoint("RIGHT", -18, 0)
   T.widgets[#T.widgets + 1] = function()
-    pic.btn:SetLabel(ns.Wallpaper().text .. T.CARET)
+    pic.btn:SetLabel((S().wallpaper == "shuffle" and "Shuffle all" or ns.Wallpaper().text) .. T.CARET)
     pic:SetAlpha(S().theme == "wallpaper" and 1 or 0.4)
   end
   local acc = K.SettingRow(c, "Accent color", "When class color is off.")

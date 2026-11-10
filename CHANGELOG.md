@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.11
+- Wallpaper: "Shuffle all" shows a different one of your pictures each time you open the BBB, like a Wallpaper Engine playlist.
+
 ## 1.0.10
 - Fixed buckets filling with more gold than you have. Forever can report 0 gold at logout and for a moment at login, which made your whole wallet look like new income and auto-fill put it in your buckets again. The BBB now waits for your real gold, and keeps the last gold it saw when logging out.
 - Auto-fill only uses gold you earn while playing, never a login gap, and never fills buckets past the gold you have.

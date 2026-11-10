@@ -84,7 +84,7 @@ The Wallpaper theme shows your own pictures behind the window, with an adjustabl
      { file = "Wallpaper2.tga", name = "Forest" },
    }
    ```
-4. Restart the game, pick Settings → Theme → Wallpaper, then choose a picture under Settings → Wallpaper.
+4. Restart the game, pick Settings → Theme → Wallpaper, then choose a picture under Settings → Wallpaper, or **Shuffle all** for a different one each time you open the BBB.
 
 ## Development
 

@@ -44,11 +44,35 @@ function ns.Wallpapers()
   return list
 end
 
+-- Shuffle: like a Wallpaper Engine playlist, a different picture each time
+-- you open the window (no timers).
+local shuffled
+function ns.ShuffleWallpaper()
+  local list = ns.Wallpapers()
+  if #list < 2 then shuffled = 1; return end
+  local pick
+  repeat pick = math.random(#list) until pick ~= shuffled
+  shuffled = pick
+end
+
 function ns.Wallpaper()
   local list = ns.Wallpapers()
   local want = ns.db and ns.db.settings.wallpaper
+  if want == "shuffle" then
+    if not shuffled or not list[shuffled] then ns.ShuffleWallpaper() end
+    return list[shuffled] or list[1]
+  end
   for _, w in ipairs(list) do if w.file == want then return w end end
   return list[1]
+end
+
+-- The Wallpaper menu: Shuffle all (when there's more than one), then each picture.
+function ns.WallpaperChoices()
+  local list = ns.Wallpapers()
+  if #list < 2 then return list end
+  local out = { { value = "shuffle", text = "Shuffle all" } }
+  for _, w in ipairs(list) do out[#out + 1] = w end
+  return out
 end
 
 T.widgets = {} -- repaint functions run after every change

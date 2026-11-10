@@ -228,7 +228,10 @@ local function Create()
 
   function window:SetHeading(t, s) title:SetText(t); subtitle:SetText(s or "") end
   window.content = content
-  window:SetScript("OnShow", function() ns.RefreshWindow() end)
+  window:SetScript("OnShow", function()
+    if ns.db.settings.wallpaper == "shuffle" then ns.ShuffleWallpaper() end
+    ns.RefreshWindow()
+  end)
   window:SetScript("OnHide", function() T.CloseMenu() end)
   window:Hide()
 end
