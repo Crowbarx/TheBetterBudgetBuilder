@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.12
+- The Train my list bar sizes itself to its text, so the skip note no longer runs under the button.
+
 ## 1.0.11
 - Wallpaper: "Shuffle all" shows a different one of your pictures each time you open the BBB, like a Wallpaper Engine playlist.
 

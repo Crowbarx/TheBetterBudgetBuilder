@@ -168,6 +168,10 @@ local function RefreshBar()
   local pos = ns.db.settings.trainBar
   b:ClearAllPoints()
   if pos then b:SetPoint("CENTER", UIParent, "CENTER", pos.x, pos.y) else b:SetPoint("TOP", UIParent, "TOP", 0, -140) end
+  -- Size the bar to its text so nothing runs under the button.
+  local textW = math.max(b.title:GetStringWidth() or 0, b.sub:GetStringWidth() or 0)
+  local btnW = b.btn:IsShown() and (b.btn:GetWidth() + 24) or 12
+  b:SetWidth(math.max(320, 12 + 30 + 10 + textW + btnW + 8))
   b:Show()
 end
 ns.RefreshTrainBar = RefreshBar
