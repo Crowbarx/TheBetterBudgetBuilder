@@ -187,3 +187,48 @@ function C.Ranked(parent)
   end
   return f
 end
+
+---------------------------------------------------------------------------
+-- Donut (ring) chart for a single day: a ring of thin rotated textures, each
+-- coloured by the slice it falls in. The total sits in the middle.
+---------------------------------------------------------------------------
+local RING_SEGS = 180
+
+function C.Donut(parent, size, thick)
+  local f = CreateFrame("Frame", nil, parent)
+  f:SetSize(size, size)
+  local r = (size - thick) / 2
+  local arc = 2 * math.pi * r / RING_SEGS + 1.5
+  f.segs = {}
+  for i = 1, RING_SEGS do
+    local t = f:CreateTexture(nil, "ARTWORK")
+    t:SetTexture("Interface\\Buttons\\WHITE8x8")
+    local a = math.pi / 2 - (i - 0.5) * 2 * math.pi / RING_SEGS -- from the top, clockwise
+    t:SetSize(thick, arc)
+    t:SetPoint("CENTER", f, "CENTER", r * math.cos(a), r * math.sin(a))
+    if t.SetRotation then t:SetRotation(a) end
+    f.segs[i] = t
+  end
+  f.total = T.Bold(f, 18, T.TEXT); f.total:SetPoint("CENTER", 0, 8)
+  f.caption = T.Med(f, 11, T.MUTED); f.caption:SetPoint("TOP", f.total, "BOTTOM", 0, -6)
+
+  -- slices: { { key, value, color } } biggest first; total in copper
+  function f:SetData(slices, total, caption)
+    local sum = 0
+    for _, sl in ipairs(slices) do sum = sum + sl.value end
+    local idx, acc = 1, slices[1] and slices[1].value or 0
+    for i, t in ipairs(self.segs) do
+      if sum <= 0 then
+        t:SetVertexColor(1, 1, 1, 0.08)
+      else
+        local at = (i - 0.5) / RING_SEGS * sum
+        while slices[idx + 1] and at > acc do idx = idx + 1; acc = acc + slices[idx].value end
+        local c = slices[idx].color
+        t:SetVertexColor(c[1], c[2], c[3], 1)
+      end
+    end
+    self.total:SetText(ns.Coins(total, 16))
+    self.caption:SetText(caption or "")
+  end
+  return f
+end

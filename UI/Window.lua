@@ -16,7 +16,7 @@ local built = {}
 
 local function Version()
   local get = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
-  return get and get(ns.ADDON, "Version") or ""
+  return (((get and get(ns.ADDON, "Version")) or ""):gsub("^v", ""))
 end
 
 local function PageByKey(key)

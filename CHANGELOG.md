@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.13
+- Spending and Income have a Day tab: one day at a time as a ring chart with a legend, plus that day's totals. Use < and > to step through days, or Today to jump back.
+- The version under the sidebar no longer shows "vv".
+
 ## 1.0.12
 - The Train my list bar sizes itself to its text, so the skip note no longer runs under the button.
 

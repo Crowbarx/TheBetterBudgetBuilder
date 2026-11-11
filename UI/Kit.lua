@@ -125,6 +125,7 @@ end
 
 -- The range picker used on Spending and Income.
 K.RANGES = {
+  { value = "day", text = "Day", group = "day", count = 1 },
   { value = "d7", text = "7 days", group = "day", count = 7 },
   { value = "d30", text = "30 days", group = "day", count = 30 },
   { value = "w12", text = "12 weeks", group = "week", count = 12 },
