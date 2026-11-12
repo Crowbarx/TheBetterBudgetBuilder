@@ -152,9 +152,16 @@ function ns.TrainingSpells()
 end
 
 -- A bucket's goal in copper (nil = no goal).
+-- Level tiers you added to (true) or took out of (false) the Training goal.
+function ns.GoalTiers()
+  local c = ns.Char()
+  c.goalTiers = c.goalTiers or {}
+  return c.goalTiers
+end
+
 function ns.Goal(b)
   if b.auto == "training" then
-    return Tr.Goal(ns.TrainingSpells(), ns.Level())
+    return Tr.Goal(ns.TrainingSpells(), ns.Level(), ns.GoalTiers())
   end
   if b.target and b.target > 0 then return b.target end
   return nil

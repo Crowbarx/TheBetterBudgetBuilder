@@ -11,7 +11,7 @@ local QUESTION = "Interface\\Icons\\INV_Misc_QuestionMark"
 
 function page.build(p)
   local c = p.child
-  p.cards = { K.Card(c), K.Card(c), K.Card(c), K.Card(c) }
+  p.cards = { K.Card(c), K.Card(c), K.Card(c), K.Card(c), K.Card(c) }
   p.empty = T.Med(c, 13, T.MUTED, "Visit your class trainer once. The BBB reads every spell up to level 60 and its real price, then the Training bucket's goal moves with you as you level.")
   p.empty:SetWordWrap(true)
   p.heads = ns.Pool(function(parent)
@@ -23,6 +23,14 @@ function page.build(p)
     h.text = T.Bold(h, 13); h.text:SetPoint("LEFT", 16, 0)
     h.tag = T.Bold(h, 9, T.MUTED); h.tag:SetPoint("LEFT", h.text, "RIGHT", 12, 0)
     h.cost = T.Med(h, 11, T.MUTED); h.cost:SetPoint("RIGHT", -14, 0); h.cost:SetJustifyH("RIGHT")
+    h.goalBtn = T.Button(h, "", 104, 22, function(self) if self.toggle then self.toggle() end end)
+    h.goalBtn:SetPoint("RIGHT", h.cost, "LEFT", -16, 0)
+    h.goalBtn.tip = function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+      GameTooltip:AddLine(self.inGoal and "Take this level out of your Training goal" or "Add this level to your Training goal", 1, 1, 1)
+      GameTooltip:AddLine("Pre-save for it now: the Training bucket fills toward every level in your goal.", 0.7, 0.7, 0.7, true)
+      GameTooltip:Show()
+    end
     return h
   end)
   p.rows = ns.Pool(function(parent)
@@ -84,12 +92,23 @@ function page.refresh(p)
   end
   local now, readyList = Tr.CostBy(spells, level)
   local nextLvl, nextCost = Tr.NextLevel(spells, level)
-  local goal = Tr.Goal(spells, level) or 0
+  local tiers = ns.GoalTiers()
+  local goal = Tr.Goal(spells, level, tiers) or 0
   p.cards[1]:Set("Available now", ns.Coins(now, 15), now > 0 and (#readyList .. " ready to train") or "Nothing to train", now > 0 and T.WARN or T.TEXT, true)
   p.cards[2]:Set(nextLvl and ("Level " .. nextLvl) or "Next level", ns.Coins(nextCost, 15), nextLvl and "Your next new spells" or "Nothing left to learn")
   p.cards[3]:Set("Training bucket", ns.Coins(have, 15), "Goal " .. ns.Fmt(goal))
   local short = goal - have
   p.cards[4]:Set(short > 0 and "Still to save" or "Covered", ns.Coins(math.max(0, short), 15), short > 0 and "For your goal" or "You're set", short > 0 and T.BAD or T.GOOD)
+  -- Everything left to learn up to 60, minus what you skipped.
+  local allCost, allN, skipCost, skipN = 0, 0, 0, 0
+  for _, sp in ipairs(spells) do
+    if not sp.used then
+      if sp.skip then skipCost, skipN = skipCost + (sp.cost or 0), skipN + 1
+      else allCost, allN = allCost + (sp.cost or 0), allN + 1 end
+    end
+  end
+  p.cards[5]:Set("All to 60", ns.Coins(allCost, 15),
+    allN .. (allN == 1 and " spell" or " spells") .. (skipN > 0 and (", " .. skipN .. " skipped") or ""), T.GOLD)
   local y = K.Columns(p.cards, c, 0, 8, 78) + 18
 
   local a = T.Accent()
@@ -100,8 +119,18 @@ function page.refresh(p)
     h.text:SetText(g.ready and "Available now" or ("Level " .. g.lvl))
     h.text:SetTextColor(col[1], col[2], col[3])
     h.edge:SetColorTexture(col[1], col[2], col[3], 0.9)
-    local inGoal = g.ready or g.lvl == nextLvl
+    local inGoal = g.ready or Tr.InGoal(g.lvl, level, nextLvl, tiers)
     h.tag:SetText(inGoal and "IN YOUR GOAL" or "")
+    h.goalBtn:SetShown(not g.ready)
+    h.goalBtn.inGoal = inGoal
+    h.goalBtn:SetLabel(inGoal and "- Goal" or "+ Goal")
+    h.goalBtn.toggle = function()
+      local lvl = g.lvl
+      local want = not inGoal
+      -- back to the default (next level in, later levels out) clears the pick
+      if want == (lvl == nextLvl) then tiers[lvl] = nil else tiers[lvl] = want end
+      ns.Changed()
+    end
     h.tag:SetTextColor(a[1], a[2], a[3])
     h.cost:SetText(#g.spells .. (#g.spells == 1 and " spell" or " spells") .. "   " .. ns.Coins(g.cost, 11))
     y = y + 32
@@ -120,8 +149,8 @@ function page.refresh(p)
     end
     y = y + 10
   end
-  p.footText:SetText(("Available now: %d   |   Cost: %s"):format(#readyList, ns.Coins(now, 12)))
+  p.footText:SetText(("All to 60: %s   |   Skipped: %s"):format(ns.Coins(allCost, 12), ns.Coins(skipCost, 12)))
   p.trainBtn:SetShown(ns.TrainerOpen() and #(ns.TrainPlan()) > 0)
-  p.footHint:SetText(("Scanned %s  ·  click a spell to skip it; Train my list leaves it out"):format(K.Date(ns.Char().trainer.t)))
+  p.footHint:SetText(("Scanned %s  ·  click a spell to skip it"):format(K.Date(ns.Char().trainer.t)))
   return y + 8
 end

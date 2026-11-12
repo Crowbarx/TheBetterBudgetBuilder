@@ -112,6 +112,10 @@ local nl, nc = Tr.NextLevel(spells, 30)
 eq(nl, 32, "next level"); eq(nc, 3000, "next level cost (skip ignored)")
 eq(Tr.Goal(spells, 30), 5000, "goal = now + next")
 eq(Tr.Goal({}, 30), nil, "no scan, no goal")
+eq(Tr.Goal(spells, 30, { [34] = true }), 9000, "pre-save a later level")
+eq(Tr.Goal(spells, 30, { [32] = false }), 2000, "take the next level out")
+eq(Tr.Goal(spells, 30, { [30] = false }), 5000, "ready spells always count")
+eq(Tr.InGoal(34, 30, 32, nil), false, "later level out by default")
 
 -- Stats
 local today = P.Day("2026-11-09") -- a Monday

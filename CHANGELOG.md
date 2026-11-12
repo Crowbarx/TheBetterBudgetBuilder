@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.14
+- Training: an "All to 60" card with the cost of every spell you still need (skipped ones left out), and the footer shows what you skipped.
+- Training: "+ Goal" and "- Goal" on each level let you pre-save for later levels, or take your next level out of the Training goal. Ready spells always count.
+
 ## 1.0.13
 - Spending and Income have a Day tab: one day at a time as a ring chart with a legend, plus that day's totals. Use < and > to step through days, or Today to jump back.
 - The version under the sidebar no longer shows "vv".
