@@ -157,10 +157,23 @@ end
 -- "X has come online" while you owe them.
 local ev = CreateFrame("Frame")
 ev:RegisterEvent("CHAT_MSG_SYSTEM")
-ev:SetScript("OnEvent", function(_, _, msg)
+-- Forever hands addons some chat text as "secret" strings that can't be read
+-- (touching one throws an error), so skip those and read the rest safely.
+local function Readable(msg)
+  if type(msg) ~= "string" then return nil end
+  if issecretvalue and issecretvalue(msg) then return nil end
+  if canaccessvalue and not canaccessvalue(msg) then return nil end
+  return msg
+end
+
+ev:SetScript("OnEvent", function(_, _, raw)
   if not ns.db or ns.LoanLedgerOn() then return end
-  local who = type(msg) == "string" and msg:match("|Hplayer:([^|:]+)")
-  if who and msg:find("online", 1, true) and not msg:find("offline", 1, true) then
+  local msg = Readable(raw)
+  if not msg then return end
+  local ok, who, online = pcall(function()
+    return msg:match("|Hplayer:([^|:]+)"), msg:find("online", 1, true) and not msg:find("offline", 1, true)
+  end)
+  if ok and who and online then
     local loan = ns.FindLoan(who)
     if loan then ns.Print(("%s is online. You still owe them %s."):format(loan.name, ns.Fmt(ns.Remaining(loan), true))) end
     local mine = ns.FindLoan(who, "out")

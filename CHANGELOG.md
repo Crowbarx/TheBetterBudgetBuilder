@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.15
+- Fixed an error from chat messages the game locks ("secret" strings) in the friend-online loan reminder.
+
 ## 1.0.14
 - Training: an "All to 60" card with the cost of every spell you still need (skipped ones left out), and the footer shows what you skipped.
 - Training: "+ Goal" and "- Goal" on each level let you pre-save for later levels, or take your next level out of the Training goal. Ready spells always count.
