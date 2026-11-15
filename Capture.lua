@@ -149,7 +149,8 @@ function ns.SyncGold()
   c.money, c.seenAt = now, time()
   last = now
   -- Buckets never hold more than your gold (repairs fills from the old
-  -- logout bug). Buckets are shared, so only when they count this gold.
+  -- logout bug). Only with one character or alts counted, so gold you park
+  -- on a bank alt doesn't empty your main's buckets.
   local chars = 0
   for _ in pairs(ns.db.chars) do chars = chars + 1 end
   if ns.db.settings.includeAlts or chars <= 1 then

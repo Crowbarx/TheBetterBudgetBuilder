@@ -134,7 +134,7 @@ function page.refresh(p)
     or "When gold changes hands in a trade or the mail, the BBB asks whether it was a loan, either way. Gold you lend isn't counted as spending, and getting it back isn't counted as income.")
   y = y + p.hint:GetStringHeight() + 22
   local paid = {}
-  for _, l in ipairs(ns.db.loans) do if ns.Remaining(l) == 0 then paid[#paid + 1] = l end end
+  for _, l in ipairs(ns.Loans()) do if ns.Remaining(l) == 0 then paid[#paid + 1] = l end end
   p.paidHead:SetShown(#paid > 0)
   p.paid:Reset()
   if #paid > 0 then

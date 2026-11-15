@@ -15,7 +15,7 @@ ns.LoanDir = Dir
 function ns.OpenLoans(dir)
   dir = dir or "in"
   local list, total = {}, 0
-  for _, l in ipairs(ns.db.loans) do
+  for _, l in ipairs(ns.Loans()) do
     local r = ns.Remaining(l)
     if r > 0 and Dir(l) == dir then list[#list + 1] = l; total = total + r end
   end
@@ -27,7 +27,7 @@ function ns.FindLoan(name, dir)
   local k = Key(name)
   if not k then return nil end
   dir = dir or "in"
-  for _, l in ipairs(ns.db.loans) do
+  for _, l in ipairs(ns.Loans()) do
     if Key(l.name) == k and ns.Remaining(l) > 0 and Dir(l) == dir then return l end
   end
 end
@@ -45,7 +45,7 @@ function ns.AddLoan(name, copper, note, class, dir)
   else
     loan = { name = name, amount = copper, paid = 0, date = time(), note = (note ~= "" and note) or nil, class = class, history = {},
       dir = dir ~= "in" and dir or nil }
-    table.insert(ns.db.loans, loan)
+    table.insert(ns.Loans(), loan)
   end
   table.insert(loan.history, { t = time(), kind = "lent", amount = copper })
   if dir == "out" then
@@ -75,7 +75,7 @@ function ns.Repay(loan, copper)
 end
 
 function ns.DeleteLoan(loan)
-  for i, l in ipairs(ns.db.loans) do if l == loan then table.remove(ns.db.loans, i); break end end
+  for i, l in ipairs(ns.Loans()) do if l == loan then table.remove(ns.Loans(), i); break end end
   ns.Changed()
 end
 

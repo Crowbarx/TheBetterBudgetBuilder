@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.16
+- Every character now has its own budget: its own buckets and loans. Before, a new alt showed (and spent from) your main's buckets. Your existing budget stays with your highest-level character, and other characters start fresh.
+- "Count alts' gold" still gives you one shared budget across all your characters if you want that.
+
 ## 1.0.15
 - Fixed an error from chat messages the game locks ("secret" strings) in the friend-online loan reminder.
 

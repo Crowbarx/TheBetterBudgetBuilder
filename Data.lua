@@ -1,5 +1,7 @@
 -- The BBB (Better Budget Builder): saved data, settings and shared helpers.
--- Everything is stored account-wide in BBBDB so alts can join one budget later.
+-- Saved in BBBDB. Each character has its own buckets and loans (char.buckets,
+-- char.loans); db.buckets / db.loans are the shared budget used only when
+-- "Count alts' gold" is on.
 local ADDON, ns = ...
 _G.BBB = ns
 ns.ADDON = ADDON
@@ -83,7 +85,39 @@ function ns.InitDB()
     db.fixedLoot = true
   end
   ns.db = db
+  ns.SplitBudgets()
   return db
+end
+
+local function Copy(t)
+  if type(t) ~= "table" then return t end
+  local c = {}
+  for k, v in pairs(t) do c[k] = Copy(v) end
+  return c
+end
+
+-- 1.0.16: buckets and loans used to be one shared list, so a new alt showed
+-- your main's budget. Give the old list to your main (highest level, then the
+-- most history) and let every other character start its own.
+function ns.SplitBudgets()
+  local db = ns.db
+  if db.splitChars then return end
+  local rows = {}
+  for _, r in ipairs(db.ledger) do if r.char then rows[r.char] = (rows[r.char] or 0) + 1 end end
+  local main, best
+  for key, c in pairs(db.chars) do
+    local score = (c.level or 0) * 1000000 + (rows[key] or 0)
+    if not best or score > best then main, best = key, score end
+  end
+  if main then
+    local c = db.chars[main]
+    c.buckets = c.buckets or Copy(db.buckets)
+    c.loans = c.loans or Copy(db.loans)
+    -- Alts' old rows moved gold in and out of your main's buckets; drop
+    -- those notes so an alt's history doesn't claim your main's savings.
+    for _, r in ipairs(db.ledger) do if r.char ~= main then r.a = nil end end
+  end
+  db.splitChars = true
 end
 
 ---------------------------------------------------------------------------
@@ -134,10 +168,20 @@ function ns.Gold()
   return GetMoney()
 end
 
-function ns.Buckets() return ns.db.buckets end
+-- Whose budget: this character's own, or the shared one with alts counted.
+function ns.Book()
+  if ns.db.settings.includeAlts then return ns.db end
+  local c = ns.Char()
+  c.buckets = c.buckets or DefaultBuckets()
+  c.loans = c.loans or {}
+  return c
+end
+
+function ns.Buckets() return ns.Book().buckets end
+function ns.Loans() return ns.Book().loans end
 
 function ns.Bucket(id)
-  for _, b in ipairs(ns.db.buckets) do if b.id == id then return b end end
+  for _, b in ipairs(ns.Buckets()) do if b.id == id then return b end end
 end
 
 -- Your level, even in the moment before UnitLevel catches up after a ding.
@@ -169,14 +213,14 @@ end
 
 function ns.Owed()
   local t = 0
-  for _, l in ipairs(ns.db.loans) do
+  for _, l in ipairs(ns.Loans()) do
     if (l.dir or "in") == "in" then t = t + math.max(0, (l.amount or 0) - (l.paid or 0)) end
   end
   return t
 end
 
 function ns.Safe()
-  return Bk.Safe(ns.Gold(), ns.db.buckets, ns.Owed())
+  return Bk.Safe(ns.Gold(), ns.Buckets(), ns.Owed())
 end
 
 ---------------------------------------------------------------------------
