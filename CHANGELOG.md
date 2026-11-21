@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.17
+- Forever now hides realm names, which made the BBB think your character was brand new (fresh buckets, no loans). Characters are now recognized by their character ID and name, and any copy made by the change is merged back into your real budget.
+
 ## 1.0.16
 - Every character now has its own budget: its own buckets and loans. Before, a new alt showed (and spent from) your main's buckets. Your existing budget stays with your highest-level character, and other characters start fresh.
 - "Count alts' gold" still gives you one shared budget across all your characters if you want that.

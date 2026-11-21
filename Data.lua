@@ -123,9 +123,100 @@ end
 ---------------------------------------------------------------------------
 -- Characters
 ---------------------------------------------------------------------------
-function ns.CharKey()
-  return (GetRealmName() or "?") .. "-" .. (UnitName("player") or "?")
+-- Forever hides realms (anti layer-hopping), so GetRealmName() can change or
+-- go blank between logins. A character is found by its GUID, then by name;
+-- the realm in the key is only a label from the first time we saw you.
+local function Readable(v)
+  if v == nil then return nil end
+  if issecretvalue and issecretvalue(v) then return nil end
+  if canaccessvalue and not canaccessvalue(v) then return nil end
+  if type(v) ~= "string" or v == "" then return nil end
+  return v
 end
+
+local function NameOf(key) return key:match("%-([^%-#]+)#?%d*$") end
+ns.NameOf = NameOf
+
+local function Merge(db, intoKey, fromKey)
+  local into, from = db.chars[intoKey], db.chars[fromKey]
+  db.mergedChars = db.mergedChars or {}
+  db.mergedChars[fromKey] = { into = intoKey, t = time(), data = from }
+  for _, r in ipairs(db.ledger) do if r.char == fromKey then r.char = intoKey end end
+  into.played = into.played or {}
+  for day, sec in pairs(from.played or {}) do into.played[day] = (into.played[day] or 0) + sec end
+  into.levels = into.levels or {}
+  for lvl, t in pairs(from.levels or {}) do
+    if not into.levels[lvl] or t < into.levels[lvl] then into.levels[lvl] = t end
+  end
+  if (from.seenAt or 0) > (into.seenAt or 0) then
+    into.money, into.seenAt = from.money, from.seenAt
+    into.trainer = from.trainer or into.trainer
+    into.class, into.name = from.class or into.class, from.name or into.name
+  end
+  into.level = math.max(into.level or 0, from.level or 0)
+  into.goalTiers = into.goalTiers or from.goalTiers
+  -- Your real budget is the older one; gold the new copy set aside goes
+  -- into the same bucket if you still have it, otherwise back to Safe.
+  if into.buckets and from.buckets then
+    for _, fb in ipairs(from.buckets) do
+      for _, b in ipairs(into.buckets) do
+        if b.id == fb.id and (fb.saved or 0) > 0 then b.saved = (b.saved or 0) + fb.saved end
+      end
+    end
+  else
+    into.buckets = into.buckets or from.buckets
+  end
+  if from.loans and #from.loans > 0 then
+    into.loans = into.loans or {}
+    for _, l in ipairs(from.loans) do into.loans[#into.loans + 1] = l end
+  end
+  db.chars[fromKey] = nil
+end
+
+local cachedKey
+function ns.CharKey()
+  if cachedKey then return cachedKey end
+  local name = Readable(UnitName("player"))
+  local realm = Readable(GetRealmName()) or "?"
+  if not name or not ns.db then return realm .. "-" .. (name or "?") end
+  local db = ns.db
+  local guid = Readable(UnitGUID and UnitGUID("player"))
+  -- Every saved copy of this character.
+  local found = {}
+  for key, c in pairs(db.chars) do
+    if (guid and c.guid == guid) or (NameOf(key) == name and (not c.guid or not guid or c.guid == guid)) then
+      found[#found + 1] = key
+    end
+  end
+  local key
+  if #found == 0 then
+    key = realm .. "-" .. name
+    local base, n = key, 2
+    while db.chars[key] do key = base .. "#" .. n; n = n + 1 end
+  else
+    key = found[1]
+    if #found > 1 then
+      -- The copy with the oldest history is the real one; fold the rest in.
+      local first = {}
+      for _, r in ipairs(db.ledger) do
+        if r.char and r.t and (not first[r.char] or r.t < first[r.char]) then first[r.char] = r.t end
+      end
+      local function Age(k)
+        local t = first[k] or math.huge
+        for _, lt in pairs(db.chars[k].levels or {}) do if lt < t then t = lt end end
+        return t
+      end
+      table.sort(found, function(a, b) return Age(a) < Age(b) end)
+      key = found[1]
+      for i = 2, #found do Merge(db, key, found[i]) end
+    end
+  end
+  local c = db.chars[key]
+  if c and guid then c.guid = guid end
+  cachedKey = key
+  return key
+end
+function ns.ForgetCharKey() cachedKey = nil end
 
 function ns.Char(key)
   key = key or ns.CharKey()
@@ -142,7 +233,7 @@ function ns.IsMine(name)
   if not name or name == "" then return false end
   local short = (name:match("^([^%-]+)") or name):lower()
   for key in pairs(ns.db.chars) do
-    local n = key:match("%-([^%-]+)$")
+    local n = NameOf(key)
     if n and n:lower() == short then return true end
   end
   return false
