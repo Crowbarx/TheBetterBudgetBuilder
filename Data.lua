@@ -166,9 +166,30 @@ local function Merge(db, intoKey, fromKey)
   else
     into.buckets = into.buckets or from.buckets
   end
+  -- A loan you entered again on the new copy (because the old one seemed
+  -- gone) is the same loan: same friend, direction and amount. Keep the one
+  -- with the most paid back.
   if from.loans and #from.loans > 0 then
     into.loans = into.loans or {}
-    for _, l in ipairs(from.loans) do into.loans[#into.loans + 1] = l end
+    local Key = ns.LoanKey or function(n) return n and n:lower() end
+    for _, l in ipairs(from.loans) do
+      local same
+      for _, o in ipairs(into.loans) do
+        if Key(o.name) == Key(l.name) and (o.dir or "in") == (l.dir or "in") and o.amount == l.amount
+          and (o.date or 0) <= (l.date or 0) and not o.merged then same = o; break end
+      end
+      if same then
+        if (l.paid or 0) > (same.paid or 0) then
+          same.paid, same.cleared = l.paid, l.cleared
+          same.history = same.history or {}
+          for _, h in ipairs(l.history or {}) do if h.kind ~= "lent" then same.history[#same.history + 1] = h end end
+        end
+        same.merged = true
+      else
+        into.loans[#into.loans + 1] = l
+      end
+    end
+    for _, o in ipairs(into.loans) do o.merged = nil end
   end
   db.chars[fromKey] = nil
 end

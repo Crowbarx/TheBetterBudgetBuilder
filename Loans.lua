@@ -4,7 +4,10 @@
 --              when you hand it over, or as income when they pay it back.
 local _, ns = ...
 
-local function Key(name) return name and ((name:match("^([^%-]+)") or name):lower()) or nil end
+-- First part of a name: "Little-Sean" and "Little Sean" (Forever's two-part
+-- names, with or without the realm-style dash) are the same friend.
+local function Key(name) return name and ((name:match("^([^%-%s]+)") or name):lower()) or nil end
+ns.LoanKey = Key
 
 function ns.Remaining(loan) return math.max(0, (loan.amount or 0) - (loan.paid or 0)) end
 
