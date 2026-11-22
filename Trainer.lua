@@ -24,9 +24,24 @@ local function ReadService(i)
 end
 ns.ReadTrainerService = ReadService
 
+-- A hunter's Beast Training window uses the trainer API too, but its spells
+-- cost training points, not gold. It has no trainer NPC (or the "NPC" is
+-- your pet), so it never counts as your class trainer.
+function ns.IsPetTrainer()
+  local ok, pet = pcall(function()
+    if not UnitExists or not UnitExists("pet") then return false end
+    if not UnitExists("npc") then return true end
+    if UnitIsUnit and UnitIsUnit("npc", "pet") then return true end
+    local a, b = UnitName("npc"), UnitName("pet")
+    return a ~= nil and a == b
+  end)
+  return ok and pet or false
+end
+
 function ns.ScanTrainer()
   if not GetNumTrainerServices then return end
   if IsTradeskillTrainer and IsTradeskillTrainer() then return end
+  if ns.IsPetTrainer() then return end
   -- Show every spell for the read, then put your filters back.
   local old = {}
   for _, f in ipairs(FILTERS) do

@@ -101,7 +101,7 @@ local function Classify(d)
     end
   end
   if spend then
-    if open.trainer then return open.trainer, { who = open.who } end
+    if open.trainer and open.trainer ~= "pet" then return open.trainer, { who = open.who } end
     if open.merchant then return (InRepairMode and InRepairMode()) and "repair" or "vendor_buy", { who = open.who } end
     if open.taxi then return "flight", nil end
     if open.ah then return "ah_buy", nil end
@@ -192,6 +192,7 @@ local function InstallHooks()
   end) end
   if BuyTrainerService then hooksecurefunc("BuyTrainerService", function(i)
     local name, rank = ns.ReadTrainerService(i)
+    if ns.IsPetTrainer and ns.IsPetTrainer() then return end -- training points, not gold
     local prof = IsTradeskillTrainer and IsTradeskillTrainer()
     local label = name and ((rank and rank ~= "") and (name .. " (" .. rank .. ")") or name)
     ns.Pend(prof and "profession" or "training", { who = NpcName(), note = label })
@@ -341,7 +342,8 @@ ev:SetScript("OnEvent", function(_, event, a1, a2, a3)
   elseif event == "MERCHANT_SHOW" then Open("merchant"); open.who = NpcName()
   elseif event == "MERCHANT_CLOSED" then Close("merchant")
   elseif event == "TRAINER_SHOW" then
-    Open("trainer", (IsTradeskillTrainer and IsTradeskillTrainer()) and "profession" or "training")
+    Open("trainer", (IsTradeskillTrainer and IsTradeskillTrainer()) and "profession"
+      or (ns.IsPetTrainer and ns.IsPetTrainer()) and "pet" or "training")
     open.who = NpcName()
     C_Timer.After(0.2, function() if ns.ScanTrainer then pcall(ns.ScanTrainer) end end)
   elseif event == "TRAINER_CLOSED" then Close("trainer")

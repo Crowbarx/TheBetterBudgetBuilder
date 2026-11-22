@@ -86,6 +86,23 @@ function ns.InitDB()
   end
   ns.db = db
   ns.SplitBudgets()
+  -- 1.0.18: Beast Training (pet skills, paid in training points) was read as
+  -- a hunter's class trainer. Drop those lists; the next class trainer visit
+  -- reads the real one.
+  if not db.fixedPetTrainer then
+    local PET = { ["Great Stamina"] = 1, ["Natural Armor"] = 1, ["Growl"] = 1, ["Bite"] = 1, ["Claw"] = 1,
+      ["Dash"] = 1, ["Dive"] = 1, ["Cower"] = 1, ["Prowl"] = 1, ["Charge"] = 1, ["Furious Howl"] = 1,
+      ["Lightning Breath"] = 1, ["Scorpid Poison"] = 1, ["Screech"] = 1, ["Shell Shield"] = 1, ["Thunderstomp"] = 1,
+      ["Arcane Resistance"] = 1, ["Fire Resistance"] = 1, ["Frost Resistance"] = 1, ["Nature Resistance"] = 1,
+      ["Shadow Resistance"] = 1 }
+    for _, c in pairs(db.chars) do
+      local sp = c.class == "HUNTER" and c.trainer and c.trainer.spells
+      if sp then
+        for _, s in ipairs(sp) do if PET[s.name] then c.trainer = nil; break end end
+      end
+    end
+    db.fixedPetTrainer = true
+  end
   return db
 end
 

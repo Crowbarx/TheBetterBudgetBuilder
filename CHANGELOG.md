@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.18
+- Hunters: the Beast Training window (pet skills, paid with training points) no longer shows up on the Training page as gold costs. If it already did, that list is cleared; visit your class trainer once to read your real spells.
+
 ## 1.0.17
 - Forever now hides realm names, which made the BBB think your character was brand new (fresh buckets, no loans). Characters are now recognized by their character ID and name, and any copy made by the change is merged back into your real budget. A loan you re-entered on the copy is matched to the original, so it isn't counted twice.
 - Loans match friends' two-part names with or without the dash ("Little-Sean" and "Little Sean").
